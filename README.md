@@ -12,4 +12,10 @@ Lucene实现全文检索技术
 - 把文件对象写入索引库  
  
 - 关闭indexwriter对象  
+
+## 使用luke查看索引信息  
+
+下载luke  
+双击.bat文件打开  
+其中有overviwe doucument search等选项  
  

@@ -4,8 +4,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.Test;
@@ -65,4 +65,38 @@ public class LuceneFirst {
         indexWriter.close();
     }
 
+    /**
+     * 查询索引库
+     * 创建一个director对象 指定索引库的位置
+     * 创建一个indexReader对象
+     * 创建一个indexsearcher对象 构造方法中的参数 indexReader
+     * 创建一个query对象 teamQuery
+     * 执行查询 得到一个查询结果 topdocs对象
+     * 取查询结果的总记录数
+     * 取出文档列表
+     * 打印文档中的内容
+     * 关闭indexReader对象
+     */
+    @Test
+    public void searchIndex() throws IOException {
+        Directory directory = FSDirectory.open(new File("G:\\ideaProject\\index").toPath());
+        IndexReader indexReader = DirectoryReader.open(directory);
+        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+        Query query = new TermQuery(new Term("content","spring"));
+        TopDocs topDocs = indexSearcher.search(query, 10);
+        System.out.println("topDocs = " + topDocs.totalHits);
+        ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+        for (ScoreDoc scoreDoc : scoreDocs) {
+            //取出文档id
+            int docId = scoreDoc.doc;
+            //根据id取文档对象
+            Document document = indexSearcher.doc(docId);
+            System.out.println("document = " + document.get("name"));
+            System.out.println("document = " + document.get("path"));
+            System.out.println("document = " + document.get("size"));
+            //System.out.println("document = " + document.get("content"));
+            System.out.println("------------------------------->");
+        }
+        indexReader.close();
+    }
 }

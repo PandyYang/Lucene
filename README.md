@@ -18,4 +18,4 @@ Lucene实现全文检索技术
 下载luke  
 双击.bat文件打开  
 其中有overviwe doucument search等选项  
- 
+https://github.com/PandyYang/Lucene/blob/master/1558349224(1).jpg

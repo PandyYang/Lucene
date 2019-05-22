@@ -1,6 +1,10 @@
 package com.pandy.lucene;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
@@ -9,6 +13,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.Test;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,5 +103,39 @@ public class LuceneFirst {
             System.out.println("------------------------------->");
         }
         indexReader.close();
+    }
+
+    /**
+     * 标准分析器
+     * @throws Exception
+     */
+    @Test
+    public void testTokenSteam() throws Exception{
+        //创建一个Analyzer对象 standardAnalyzer对象
+        Analyzer analyzer = new StandardAnalyzer();
+        TokenStream tokenStream = analyzer.tokenStream("","The Spring Framework");
+        CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+        tokenStream.reset();
+        while (tokenStream.incrementToken()){
+            System.out.println(charTermAttribute.toString());
+        }
+        tokenStream.close();
+    }
+
+    /**
+     * 标准分析器处理中文文档
+     */
+    @Test
+    public void testTokenSteam2() throws Exception{
+        //创建一个Analyzer对象 standardAnalyzer对象
+        //Analyzer analyzer = new StandardAnalyzer();
+        Analyzer analyzer = new IKAnalyzer();
+        TokenStream tokenStream = analyzer.tokenStream("","中文分析器可以进行非法字符过滤");
+        CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+        tokenStream.reset();
+        while (tokenStream.incrementToken()){
+            System.out.println(charTermAttribute.toString());
+        }
+        tokenStream.close();
     }
 }
